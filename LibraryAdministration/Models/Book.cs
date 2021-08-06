@@ -7,6 +7,7 @@ namespace LibraryAdministration.Models
 {
     public class Book
     {
+        public int Id;
         public string Title;
         public DateTime YearPublished;
         public int PageQuantity;
