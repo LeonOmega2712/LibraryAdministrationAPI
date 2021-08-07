@@ -76,42 +76,55 @@ namespace LibraryAdministration.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] Author author)
         {
-            context.Authors.Add(author);
-            return Ok($"{author.Name}");
+            /* try
+            *  {
+            *     context.Authors.Add(author);
+            *     context.SaveChanges();
+            *     return Ok($"{author.Name}");
+            *  }
+            *  catch (Exception ex)
+            *  {
+            *     return BadRequest();
+            *  }
+            */
+
+            List<Author> authors = GenerateAuthorsList(5);
+            authors.Add(author);
+            return Ok($"El usuario insertado es {authors.Find(authors => authors.Id == author.Id).Name}");
+
         }
 
         // PUT api/<AuthorController>/5
         [HttpPut("{id}")]
         public IActionResult Put(uint id, [FromBody] Author author)
         {
-            try
+            if (author.Id == id)
             {
-                if (id != author.Id)
-                {
-                    return BadRequest();
-                }
-
-                var authorToUpdate = context.Authors.FirstOrDefault(author => author.Id == id);
-
-                if (authorToUpdate == null)
-                {
-                    return NotFound($"Author with id {id} not found");
-                }
-
-                authorToUpdate = author;
+                context.Entry(author).State = EntityState.Modified;
                 context.SaveChanges();
+                return Ok();
             }
-            catch (DbUpdateConcurrencyException)
+            else
             {
-                throw;
+                return BadRequest();
             }
-            return Ok();
         }
 
         // DELETE api/<AuthorController>/5
         [HttpDelete("{id}")]
-        public void Delete(uint id)
+        public IActionResult Delete(uint id)
         {
+            var author = context.Authors.FirstOrDefault(_author => _author.Id == id);
+            if (author != null)
+            {
+                context.Authors.Remove(author);
+                context.SaveChanges();
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
         #endregion
     }
