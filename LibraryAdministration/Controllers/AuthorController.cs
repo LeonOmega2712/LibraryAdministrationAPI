@@ -91,7 +91,7 @@ namespace LibraryAdministration.Controllers
 
             List<Author> authors = GenerateAuthorsList(5);
             authors.Add(author);
-            return Ok($"El usuario insertado es {authors.Find(authors => authors.Name == author.Name).Name}");
+            return Ok($"The inserted user is {authors.FirstOrDefault(authors => authors.Name == author.Name).Name}");
         }
 
         // PUT api/<AuthorController>/5
