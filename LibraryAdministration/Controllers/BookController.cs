@@ -13,9 +13,10 @@ namespace LibraryAdministration.Controllers
     [ApiController]
     public class BookController : ControllerBase
     {
-        public List<Book> books = new List<Book>() { 
+        #region Book static list
+        public List<Book> books = new List<Book>() {
             new Book()
-            { 
+            {
                 Id = 1,
                 Title = "First book",
                 YearPublished = new DateTime(2021, 8, 9),
@@ -23,7 +24,7 @@ namespace LibraryAdministration.Controllers
                 StockQuantity = 10,
                 IdAuthor = 1
             },
-            new Book() 
+            new Book()
             {
                 Id = 2,
                 Title = "Second book",
@@ -59,7 +60,8 @@ namespace LibraryAdministration.Controllers
                 StockQuantity = 10,
                 IdAuthor = 3
             }
-        };
+        }; 
+        #endregion
 
         #region API methods
         // GET: api/<BookController>
