@@ -1,3 +1,4 @@
+using AutoMapper;
 using LibraryAdministration.Context;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -36,6 +37,15 @@ namespace LibraryAdministration
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "LibraryAdministration", Version = "v1" });
             });
+
+            // Mapper configuration
+            var mapperConfiguration = new MapperConfiguration(mc => {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            IMapper mapper = mapperConfiguration.CreateMapper();
+            services.AddSingleton(mapper);
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
