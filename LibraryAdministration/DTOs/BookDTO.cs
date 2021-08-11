@@ -26,5 +26,10 @@ namespace LibraryAdministration.DTOs
 
         [Required(ErrorMessage = "The field IdAuthor is required")]
         public uint IdAuthor { get; set; }
+
+        public bool Available
+        {
+            get { return StockQuantity != 0; }
+        }
     }
 }

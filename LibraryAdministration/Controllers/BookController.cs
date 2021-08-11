@@ -1,4 +1,6 @@
-﻿using LibraryAdministration.Models;
+﻿using AutoMapper;
+using LibraryAdministration.DTOs;
+using LibraryAdministration.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -13,8 +15,17 @@ namespace LibraryAdministration.Controllers
     [ApiController]
     public class BookController : ControllerBase
     {
+        #region AutoMapper configuration
+        private readonly IMapper _mapper;
+
+        public BookController(IMapper mapper)
+        {
+            _mapper = mapper;
+        }
+        #endregion
+
         #region Book static list
-        public List<Book> books = new List<Book>() {
+        public List<Book> books = new() {
             new Book()
             {
                 Id = 1,
@@ -60,7 +71,7 @@ namespace LibraryAdministration.Controllers
                 StockQuantity = 10,
                 IdAuthor = 3
             }
-        }; 
+        };
         #endregion
 
         #region API methods
@@ -76,6 +87,14 @@ namespace LibraryAdministration.Controllers
         public Book Get(uint id)
         {
             return books.FirstOrDefault(books => books.Id == id);
+        }
+
+        [HttpGet("{Title}")]
+        public IActionResult GetBookByTitle(string Title)
+        {
+            Book book = books.FirstOrDefault(books => books.Title == Title);
+
+            return Ok(_mapper.Map<Book, BookDTO>(book));
         }
 
         // POST api/<BookController>

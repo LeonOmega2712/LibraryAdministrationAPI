@@ -1,12 +1,10 @@
 ﻿using AutoMapper;
 using LibraryAdministration.DTOs;
 using LibraryAdministration.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace LibraryAdministration.Controllers
 {
@@ -14,13 +12,16 @@ namespace LibraryAdministration.Controllers
     [ApiController]
     public class AuthorBookController : ControllerBase
     {
+        #region AutoMapper configuration
         private readonly IMapper _mapper;
 
         public AuthorBookController(IMapper mapper)
         {
             _mapper = mapper;
         }
+        #endregion
 
+        #region API Methods
         [HttpPost]
         public IActionResult GetAuthorAndItsBooks(BookDTO RecievedBook)
         {
@@ -34,7 +35,7 @@ namespace LibraryAdministration.Controllers
             uint i = 1;
             foreach (var author in authors)
             {
-                List<BookDTO> booksOfAuthor = new();
+                List<Book> booksOfAuthor = new();
                 foreach (var book in books)
                 {
                     if (author.Id == book.IdAuthor)
@@ -43,23 +44,26 @@ namespace LibraryAdministration.Controllers
                     }
                 }
 
-                authorBooks.Add(new AuthorBookDTO() {
+                authorBooks.Add(new AuthorBookDTO()
+                {
                     Id = i,
                     Author = _mapper.Map<AuthorDTO, Author>(author),
-                    Book = _mapper.Map<List<BookDTO>, List<Book>>(booksOfAuthor)
+                    Books = _mapper.Map<List<Book>, List<BookDTO>>(booksOfAuthor)
                 });
                 i++;
             }
 
-            // TODO: Sort by author.name
-
-
-            return Ok(authorBooks);
+            return Ok(authorBooks.OrderByDescending(author => author.Author.Name));
         }
 
+
+        
+
+        #endregion
+
         #region Book static list
-        public List<BookDTO> books = new List<BookDTO>() {
-            new BookDTO()
+        public List<Book> books = new() {
+            new Book()
             {
                 Id = 1,
                 Title = "First book",
@@ -68,7 +72,7 @@ namespace LibraryAdministration.Controllers
                 StockQuantity = 10,
                 IdAuthor = 1
             },
-            new BookDTO()
+            new Book()
             {
                 Id = 2,
                 Title = "Second book",
@@ -77,7 +81,7 @@ namespace LibraryAdministration.Controllers
                 StockQuantity = 15,
                 IdAuthor = 1
             },
-            new BookDTO()
+            new Book()
             {
                 Id = 3,
                 Title = "Third book",
@@ -86,7 +90,7 @@ namespace LibraryAdministration.Controllers
                 StockQuantity = 5,
                 IdAuthor = 2
             },
-            new BookDTO()
+            new Book()
             {
                 Id = 4,
                 Title = "Fourth book",
@@ -95,7 +99,7 @@ namespace LibraryAdministration.Controllers
                 StockQuantity = 0,
                 IdAuthor = 2
             },
-            new BookDTO()
+            new Book()
             {
                 Id = 5,
                 Title = "Fifth book",
@@ -108,7 +112,7 @@ namespace LibraryAdministration.Controllers
         #endregion
 
         #region Authors static list
-        public List<AuthorDTO> authors = new List<AuthorDTO>() {
+        public List<AuthorDTO> authors = new() {
             new AuthorDTO()
             {
                 Id = 1,

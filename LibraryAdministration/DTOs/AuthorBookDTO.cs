@@ -17,6 +17,6 @@ namespace LibraryAdministration.DTOs
         public Author Author { get; set; }
 
         [DataMember]
-        public List<Book> Book { get; set; }
+        public List<BookDTO> Books { get; set; }
     }
 }
