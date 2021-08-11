@@ -22,15 +22,90 @@ namespace LibraryAdministration.Controllers
         #endregion
 
         #region API Methods
-        [HttpPost]
-        public IActionResult GetAuthorAndItsBooks(BookDTO RecievedBook)
-        {
-            return Ok(_mapper.Map<BookDTO, AuthorDTO>(RecievedBook));
-        }
+        /* Test API method to map entities
+         * [HttpPost]
+         * public IActionResult GetAuthorAndItsBooks(BookDTO RecievedBook)
+         * {
+         *     return Ok(_mapper.Map<BookDTO, AuthorDTO>(RecievedBook));
+         * }
+         */
 
         [HttpGet]
-        public IActionResult GetAllAuthorsAndBooks()
+        public IActionResult GetAllAuthorsAndBooks(string authorsName)
         {
+            if (authorsName == null)
+            {
+                List<AuthorBookDTO> authorBooks = new();
+                uint i = 1;
+                foreach (var author in authors)
+                {
+                    List<Book> booksOfAuthor = new();
+                    foreach (var book in books)
+                    {
+                        if (author.Id == book.IdAuthor)
+                        {
+                            booksOfAuthor.Add(book);
+                        }
+                    }
+
+                    authorBooks.Add(new AuthorBookDTO()
+                    {
+                        Id = i,
+                        Author = _mapper.Map<AuthorDTO, Author>(author),
+                        Books = _mapper.Map<List<Book>, List<BookDTO>>(booksOfAuthor)
+                    });
+                    i++;
+                }
+
+                return Ok(authorBooks.OrderByDescending(author => author.Author.Name));
+            }
+            else
+            {
+                List<AuthorBookDTO> authorBooks = new();
+                uint i = 1;
+                foreach (var author in authors)
+                {
+                    List<Book> booksOfAuthor = new();
+                    foreach (var book in books)
+                    {
+                        if (author.Id == book.IdAuthor)
+                        {
+                            booksOfAuthor.Add(book);
+                        }
+                    }
+
+                    authorBooks.Add(new AuthorBookDTO()
+                    {
+                        Id = i,
+                        Author = _mapper.Map<AuthorDTO, Author>(author),
+                        Books = _mapper.Map<List<Book>, List<BookDTO>>(booksOfAuthor)
+                    });
+                    i++;
+                }
+
+                List<AuthorBookDTO> filteredAuthors = new();
+                foreach (var authorBook in authorBooks)
+                {
+                    if (authorBook.Author.Name.Contains(authorsName))
+                    {
+                        filteredAuthors.Add(authorBook);
+                    }
+                }
+
+                return Ok(filteredAuthors);
+            }
+            
+        }
+
+        [HttpPost]
+        public IActionResult PostAuthorAndBook([FromBody] AuthorBookDTO authorBook)
+        {
+            authors.Add(_mapper.Map<Author,AuthorDTO>(authorBook.Author));
+            foreach (var book in authorBook.Books)
+            {
+                books.Add(_mapper.Map<BookDTO,Book>(book));
+            }
+
             List<AuthorBookDTO> authorBooks = new();
             uint i = 1;
             foreach (var author in authors)
@@ -47,7 +122,7 @@ namespace LibraryAdministration.Controllers
                 authorBooks.Add(new AuthorBookDTO()
                 {
                     Id = i,
-                    Author = _mapper.Map<AuthorDTO, Author>(author),
+                    Author = _mapper.Map<AuthorDTO,Author>(author),
                     Books = _mapper.Map<List<Book>, List<BookDTO>>(booksOfAuthor)
                 });
                 i++;
@@ -55,9 +130,6 @@ namespace LibraryAdministration.Controllers
 
             return Ok(authorBooks.OrderByDescending(author => author.Author.Name));
         }
-
-
-        
 
         #endregion
 
