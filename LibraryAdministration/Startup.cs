@@ -46,6 +46,8 @@ namespace LibraryAdministration
             IMapper mapper = mapperConfiguration.CreateMapper();
             services.AddSingleton(mapper);
             services.AddMvc();
+
+            services.AddCors();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -61,6 +63,9 @@ namespace LibraryAdministration
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            // Allow the Angular client to make requests to our API from a external URL
+            app.UseCors(policy => policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200"));
 
             app.UseAuthorization();
 
