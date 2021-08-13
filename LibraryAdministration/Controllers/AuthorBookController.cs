@@ -134,7 +134,7 @@ namespace LibraryAdministration.Controllers
         #endregion
 
         #region Book static list
-        public List<Book> books = new() {
+        public static List<Book> books = new() {
             new Book()
             {
                 Id = 1,
@@ -184,7 +184,7 @@ namespace LibraryAdministration.Controllers
         #endregion
 
         #region Authors static list
-        public List<AuthorDTO> authors = new() {
+        public static List<AuthorDTO> authors = new() {
             new AuthorDTO()
             {
                 Id = 1,
