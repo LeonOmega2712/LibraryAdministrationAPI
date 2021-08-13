@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace LibraryAdministration.Controllers
 {
@@ -31,7 +32,7 @@ namespace LibraryAdministration.Controllers
          */
 
         [HttpGet]
-        public IActionResult GetAllAuthorsAndBooks(string authorsName)
+        public async Task<IActionResult> GetAllAuthorsAndBooks(string authorsName)
         {
             if (authorsName == null)
             {
@@ -57,7 +58,7 @@ namespace LibraryAdministration.Controllers
                     i++;
                 }
 
-                return Ok(authorBooks.OrderByDescending(author => author.Author.Name));
+                return await Task.FromResult(Ok(authorBooks.OrderByDescending(author => author.Author.Name)));
             }
             else
             {
@@ -92,13 +93,13 @@ namespace LibraryAdministration.Controllers
                     }
                 }
 
-                return Ok(filteredAuthors);
+                return await Task.FromResult(Ok(filteredAuthors));
             }
             
         }
 
         [HttpPost]
-        public IActionResult PostAuthorAndBook([FromBody] AuthorBookDTO authorBook)
+        public async Task<IActionResult> PostAuthorAndBook([FromBody] AuthorBookDTO authorBook)
         {
             authors.Add(_mapper.Map<Author,AuthorDTO>(authorBook.Author));
             foreach (var book in authorBook.Books)
@@ -128,7 +129,7 @@ namespace LibraryAdministration.Controllers
                 i++;
             }
 
-            return Ok(authorBooks.OrderByDescending(author => author.Author.Name));
+            return await Task.FromResult(Ok(authorBooks.OrderByDescending(author => author.Author.Name)));
         }
 
         #endregion
